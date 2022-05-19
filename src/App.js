@@ -38,3 +38,6 @@ function App() {
 }
 
 export default App
+
+// TBD: see if double clicking edit button to cancel edit and fix problem when deleting item while in edit mode leaves item info in submit area
+// See if these are fixed later in course
