@@ -12,7 +12,7 @@ function FeedbackForm() {
     const [btnDisabled, setBtnDisabled] = useState(true)
     const [message, setMessage] = useState('')
 
-    const {addFeedback, feedbackEdit} = useContext(FeedbackContext)
+    const {addFeedback, feedbackEdit, updateFeedback, editCancel} = useContext(FeedbackContext)
 
     useEffect(() => {
         if(feedbackEdit.edit === true){
@@ -42,23 +42,38 @@ function FeedbackForm() {
                 rating
             }
 
+            if(feedbackEdit.edit){
+                updateFeedback(feedbackEdit.item.id, newFeedback)
+            } else {
             addFeedback(newFeedback)
+            }
 
             setText('')
+            setRating(10)
+            setBtnDisabled(true)
         }
+    }
+
+    const handleCancelEdit = () => {
+        setText('')
+        setRating(10)
+        setBtnDisabled(true)
+        editCancel(feedbackEdit.item.id)
     }
 
   return (
     <Card>
         <form onSubmit={handleSubmit}>
             <h2>Please leave a rating and any tips for my website and projects!</h2>
-        <RatingSelect select={(rating) => setRating(rating)}/>
+        <RatingSelect select={setRating} selected={rating}/>
         <div className='input-group'>
             <input onChange={handleTextChange} 
             type="text" placeholder='Write a review' 
             value={text} />
             <Button type='submit'
             isDisabled={btnDisabled} >Send</Button>
+            {feedbackEdit.edit ? (<button className='btn btn-primary' type='button' onClick={handleCancelEdit}
+            isDisabled={btnDisabled} >Cancel</button>) : null}
         </div>
 
         {message ? <div className='message'>{message}</div> : null}

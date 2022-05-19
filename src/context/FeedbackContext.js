@@ -16,6 +16,10 @@ export const FeedbackProvider = ({children}) => {
     })
 
     const deleteFeedback = (id) => {
+      setFeedbackEdit({   
+        item:id,
+        edit: false
+    })
         if(window.confirm('Are you sure you want to permanently delete this item')){
           setFeedback(feedback.filter((item) => item.id !== id))
         }
@@ -26,20 +30,48 @@ export const FeedbackProvider = ({children}) => {
           setFeedback([newFeedback, ...feedback])
       }
 
-      //Set item to be edited
+      //Update feedback
+      const updateFeedback = (id, updItem) => {
+        setFeedback(feedback.map((item) => (item.id === id ? {
+          ...item, ...updItem} : item))
+          )
+          // Fix a bug in course code where the app gets stuck in edit mode
+          setFeedbackEdit({   
+            item:{},
+            edit: false
+        })
+      }
+
+      //Set item to be edited - changed so that clicking while in edit mode will exit edit mode
       const editFeedback = (item) => {
+        if(feedbackEdit.edit === true){
+          setFeedbackEdit({
+            item,
+            edit: false, 
+          })
+        } else {
         setFeedbackEdit({
           item,
           edit: true,
+        })}
+      }
+
+      //Adding function to handle cancelling an edit
+      const editCancel = (itm) => {
+        setFeedbackEdit({
+          itm,
+          edit: false, 
         })
       }
     
     return <FeedbackContext.Provider value={{
         feedback,
+        feedbackEdit,
         deleteFeedback,
         addFeedback,
         editFeedback,
-        feedbackEdit,
+        updateFeedback,
+        editCancel
         // feedbackEdit is the state and editFeedback is the function updating that piece of state
     }}>
         {children}
