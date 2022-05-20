@@ -23,7 +23,7 @@ function FeedbackForm() {
     }, [feedbackEdit])
 
     const handleTextChange = ({ target: {value} }) => {
-       if(value !== '' && value.trim().length < 10) {
+       if(value !== '' && value.replace(/\s/g,'').length < 10) {
             setMessage('Please type at least 10 characters')
             setBtnDisabled(true)
         } else {
