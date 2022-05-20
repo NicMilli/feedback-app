@@ -72,8 +72,7 @@ function FeedbackForm() {
             value={text} />
             <Button type='submit'
             isDisabled={btnDisabled} >Send</Button>
-            {feedbackEdit.edit ? (<button className='btn btn-primary' type='button' onClick={handleCancelEdit}
-            isDisabled={btnDisabled} >Cancel</button>) : null}
+            {feedbackEdit.edit ? (<button className='btn btn-primary' type='button' onClick={handleCancelEdit} >Cancel</button>) : null}
         </div>
 
         {message ? <div className='message'>{message}</div> : null}

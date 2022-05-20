@@ -44,17 +44,17 @@ export const FeedbackProvider = ({children}) => {
 
       //Set item to be edited - changed so that clicking while in edit mode will exit edit mode
       const editFeedback = (item) => {
-        if(feedbackEdit.edit === true){
-          setFeedbackEdit({
-            item,
-            edit: false, 
-          })
-        } else {
+        // if(feedbackEdit.edit === true){
+        //   setFeedbackEdit({
+        //     item,
+        //     edit: false, 
+        //   })
+        // } else {
         setFeedbackEdit({
           item,
           edit: true,
         })}
-      }
+     // }
 
       //Adding function to handle cancelling an edit
       const editCancel = (itm) => {
