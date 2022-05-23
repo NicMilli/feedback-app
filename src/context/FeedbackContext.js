@@ -1,39 +1,68 @@
-import {createContext, useState} from 'react'
-import { v4 as uuidv4} from 'uuid'
+import {createContext, useState, useEffect} from 'react'
 
 const FeedbackContext = createContext()
 
 export const FeedbackProvider = ({children}) => {
-    const [feedback, setFeedback] = useState ([{
-        id: 1,
-        text: 'Context item1',
-        rating: 10,
-    }])
-
+  const [isLoading, setIsLoading] = useState(true)
+    const [feedback, setFeedback] = useState ([])
     const [feedbackEdit, setFeedbackEdit] = useState({
       item: {},
       edit: false,
     })
 
-    const deleteFeedback = (id) => {
+    useEffect(() => {
+      fetchFeedback()
+    }, [])
+
+    //Fetch feedback from mock backend
+    const fetchFeedback = async () => {
+      const response = await fetch(`/feedback?_sort=id&_order=desc`)
+      const data = await response.json()
+
+      setFeedback(data)
+      setIsLoading(false)
+    }
+
+    const deleteFeedback = async (id) => {
       setFeedbackEdit({   
         item:id,
         edit: false
     })
         if(window.confirm('Are you sure you want to permanently delete this item')){
+          await fetch(`/feedback/${id}`, {method: 'DELETE'})
+
           setFeedback(feedback.filter((item) => item.id !== id))
         }
       }
 
-      const addFeedback = (newFeedback) => {
-        newFeedback.id = uuidv4()
-          setFeedback([newFeedback, ...feedback])
+      const addFeedback = async (newFeedback) => {
+        const response = await fetch('/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newFeedback)
+        })
+
+        const data = await response.json()
+        
+          setFeedback([data, ...feedback])
       }
 
       //Update feedback
-      const updateFeedback = (id, updItem) => {
+      const updateFeedback = async (id, updItem) => {
+        const response = await fetch(`/feedback/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updItem)
+        })
+
+        const data = await response.json()
+        
         setFeedback(feedback.map((item) => (item.id === id ? {
-          ...item, ...updItem} : item))
+          ...item, ...data} : item))
           )
           // Fix a bug in course code where the app gets stuck in edit mode
           setFeedbackEdit({   
@@ -67,6 +96,7 @@ export const FeedbackProvider = ({children}) => {
     return <FeedbackContext.Provider value={{
         feedback,
         feedbackEdit,
+        isLoading,
         deleteFeedback,
         addFeedback,
         editFeedback,

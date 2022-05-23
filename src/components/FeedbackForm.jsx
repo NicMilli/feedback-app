@@ -36,7 +36,7 @@ function FeedbackForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if(text.trim().length >= 10){
+        if(text.replace(/\s/g,'').length >= 10){
             const newFeedback = {
                 text,
                 rating
