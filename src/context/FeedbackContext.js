@@ -61,9 +61,8 @@ export const FeedbackProvider = ({children}) => {
 
         const data = await response.json()
         
-        setFeedback(feedback.map((item) => (item.id === id ? {
-          ...item, ...data} : item))
-          )
+        setFeedback(feedback.map((item) => (item.id === id ? data : item)))
+        
           // Fix a bug in course code where the app gets stuck in edit mode
           setFeedbackEdit({   
             item:{},
